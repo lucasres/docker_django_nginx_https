@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx_app
+    ports:
+      - "80:8000"
+      - "443:433"
+    volumes:
+      - ./src:/code
+      - ./config/nginx:/etc/nginx/conf.d
+      - /root/certs-data/:/data/letsencrypt/
+      - /apps/config/dominiohaha.tk:/etc/certificates
+    depends_on:
+      - web
+
+  web:
+    build: .
+    container_name: django_app
+    command: python3 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./src:/code
+    ports:
+      - "8000:8000"
+
